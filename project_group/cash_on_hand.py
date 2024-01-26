@@ -60,3 +60,6 @@ def cash_function():
         output += (f"[HIGHEST CASH SURPLUS] DAY: {max_day}, AMOUNT: USD{surplus}")
 
     return output
+
+
+
