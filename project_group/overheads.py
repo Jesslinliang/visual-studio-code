@@ -10,10 +10,7 @@ def overheads_function():
     with fp_read.open(mode="r", encoding="UTF-8", newline="") as file:
         reader = csv.reader(file)
         next(reader)  # skip header
-        Overheads = []
-
-        for row in reader:
-            Overheads.append([row[0], row[1]])
+        Overheads = [row for row in reader]
 
     output = ""
     max_value = float(Overheads[0][1])
@@ -25,15 +22,9 @@ def overheads_function():
             max_value = value
             max_category = category[0]
 
+    # Convert the csv data to a string
+    csv_string = "\n".join([",".join(map(str, row)) for row in Overheads])
+
     output += f"[HIGHEST OVERHEADS] {max_category}: {max_value}%"
 
-    #Convert the csv data to a string
-    csv_string = "\n|.join([",".join(map(str, row)) for row in Overheads])
-
-    return output,csv_string
-
-result, csv_string = overheads_function()
-
-
-
-
+    return output, csv_string
