@@ -1,5 +1,14 @@
 from pathlib import Path
 import csv
+def sort_by_amount(item):
+    return item[1]
+
+def calculate_increment(item, net_profit_filtered):
+    return item["net_profit"] - net_profit_filtered[net_profit_filtered.index(item)-1]["net_profit"]
+
+def calculate_decrement(item, net_profit_filtered):
+    return net_profit_filtered[net_profit_filtered.index(item) - 1]["net_profit"] - item["net_profit"]
+
 def profit_function():
     # create a file to csv file.
     file_read = Path(r"C:\project_group\csv_reports\Profit_loss.csv")
@@ -19,51 +28,39 @@ def profit_function():
                 "amount": int(row[3]),
                 "net_profit": int(row[4])
             })
+    #Filter net_profit data for days from 11 to 90
+    net_profit_filtered = [data for data in net_profit if 11<= data["day"] <= 90]
 
     deficit_days = []
 
+
     #Iterate over days to comput deficit days
-    for day in range(1, len(net_profit)):
+    for i in range(1, len(net_profit)):
         current_profit = net_profit[day]["net_profit"]
-        previous_profit = net_profit[day-1]["net_profit"]
+        previous_profit = net_profit[i-1]["net_profit"]
     # Check if the current day's net profit is less than the previous day's
         if current_profit <= previous_profit:
-            deficit_days.append(day)
+            deficit_days.append(net_profit_filtered[i]["day"])
 
     output = ""
     if deficit_days:
         # Iterate over deficit days and compute deficit amounts
-        for day in deficit_days:               
-            current_profit = net_profit[day]["net_profit"]
-            previous_profit = net_profit[day-1]["net_profit"]
-            deficit = previous_profit - current_profit
-            deficit_day = net_profit[day]["day"]
-            output += (f"\n[PROFIT DEFICIT] Day; {deficit_day}, AMOUNT: USD{deficit}")
+        deficit_amounts = [net_profit_filtered[day]["net profit"] - net_profit_filtered[i-1]["net_profit"] for i in range (1,len(net_profit_filtered)) if net_profit_filtered [i]["day"] in deficit_days]
+        deficit_days_with_amounts = list(zip(deficit_days,deficit_amounts))
+        deficit_days_with_amounts.sort(key=sort_by_amount, reverse=True)
+
+        output += "\n\n[TOP 3 DEFICIT DAYS]\n"
+        for day, amount in deficit_days_with_amounts[:3]:
+            output += f"Day {day}: AMOUNT: USD{amount}\n"
 
     else:
-        # Find the day with the highest net ptofit
-        max_profit = float(net_profit[0]["net_profit"])
-        max_day = net_profit[0]["day"]
+        # Find the day with the highest net ptofit amount
+        max_increment = max(net_profit_filtered, key=calculate_increment)
+        output += f"\n[HIGHEST INCREMENT] Day: {max_increment["day"]}, AMOUNT: USD{calculate_increment(max_increment)}\n"
 
-        for day in net_profit:
-            profit = float(day["net_profit"])
-            if profit > max_profit:
-                max_profit = profit
-                max_day = day_data["day"]
-
-        # Find the net profit on the day before the highest net profit day
-        previous_day = int(max_day) - 1
-        previous_day_profit = 0
-
-        for day_data in net_profit:
-            if day_data["day"] == previous_day:
-                previous_day_profit = float(day_data["net_profit"])
-                break
-        
-        # Compute surplus and add to the output
-        surplus = max_profit - previous_day_profit
-        output += (f"[NET PROFIT SURPLUS] NET PROFIT ON EACH DAY IS HIGHER THAN THE PREVIOUS DAY")
-        output += (f"[HIGHEST NET PROFIT SURPLUS] DAY: {max_day}, AMOUNT: USD{surplus}")
-
+    # Find the day with the highest net profit decrement
+        max_decrement = min(net_profit_filtered, key=calculate_decrement)
+        output += f"[HIGHEST DECREMENT] Day: {max_decrement["day"]}, AMOUNT:USD{calculate_decrement(max_decrement)}\n"
+                                              
     return output
  
