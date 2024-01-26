@@ -26,3 +26,4 @@ def main():
         file.write("[HIGHEST CASH SURPLUS] DAY: AMOUNT:\n")
         file.write("[NET PROFIT SURPLUS] DAY: AMOUNT:\n")
         file.write("[HIGHEST NET PROFIT SURPLUS] DAY: AMOUNT:\n\n")
+
