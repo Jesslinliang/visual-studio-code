@@ -130,7 +130,7 @@ def cash_function():
             deficit_day = int(cash_on_hand[day][0])
             write_file.write(f"[CASH DEFICIT Day]: {deficit_day}, AMOUNT: USD{deficit}\n")
 
-        #Write all cash deficit days
+        # Write all cash deficit days
         write_file.write("\n[ALL DEFICIT DAYS]\n")
         for day, deficit in deficit_days:
             deficit_day = int(cash_on_hand[day][0])
