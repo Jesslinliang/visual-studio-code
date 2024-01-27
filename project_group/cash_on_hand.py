@@ -88,13 +88,15 @@ def cash_function():
     for day, deficit in deficit_days:
         deficit_day = int(cash_on_hand[day][0])
         all_deficit_output += f"\n[CASH DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}"
-
     # Append the top 3 cash deficit to the main output
     output += all_deficit_output
     
+    # Sort the top 3 deficit days by days in ascending order
+    top_deficit_days.sort()
+
     #Append the top 3 cash deficit to the main output
     output += "\n[TOP 3 DEFICIT DAYS]"
-    for day, deficit in deficit_days:
+    for i, (day, deficit) in enumerate(top_deficit_days, start=1):
         deficit_day = int(cash_on_hand[day][0])
         all_deficit_output += f"\n[CASH DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}"
 
@@ -104,14 +106,14 @@ def cash_function():
     max_day = cash_on_hand[0][0]
 
     # Iterate through the rest of the elements in cash_on_hand
-    for day in cash_on_hand:
+    for day, deficit in top_deficit_days:
         # Extract the cash value from the current day
-        cash = int(day[1])
+        cash = int(cash_on_hand[day][1])
         # Check if the current cash value is greater than the max_cash
         if cash > max_cash:
             # Update max_cash and max_day with the current values
             max_cash = cash
-            max_day = day[0]
+            max_day = int(cash_on_hand[day][0])
 
     previous_day = int(max_day) - 1
     previous_day_cash = 0
@@ -123,7 +125,16 @@ def cash_function():
 
     # Append the result to the summary_report.txt file starting from the second line
     with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
-        write_file.write("\n" + output)
+        write_file.write("\n[TOP 3 DEFICIT DAYS]\n")
+        for i, (day, deficit) in enumerate(top_deficit_days, start=1):
+            deficit_day = int(cash_on_hand[day][0])
+            write_file.write(f"CASH DEFICIT Day: {deficit_day}, AMOUNT: USD{deficit}\n")
+
+        #Write all cash deficit days
+        write_file.write("\n[ALL DEFICIT DAYS]\n")
+        for day, deficit in deficit_days:
+            deficit_day = int(cash_on_hand[day][0])
+            write_file.write(f"CASH DEFICIT Day: {deficit_day}, AMOUNT: USD{deficit}\n")
 
     return output
 
