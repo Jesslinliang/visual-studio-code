@@ -128,13 +128,13 @@ def cash_function():
         write_file.write("\n[TOP 3 DEFICIT DAYS]\n")
         for i, (day, deficit) in enumerate(top_deficit_days, start=1):
             deficit_day = int(cash_on_hand[day][0])
-            write_file.write(f"CASH DEFICIT Day: {deficit_day}, AMOUNT: USD{deficit}\n")
+            write_file.write(f"[CASH DEFICIT Day]: {deficit_day}, AMOUNT: USD{deficit}\n")
 
         #Write all cash deficit days
         write_file.write("\n[ALL DEFICIT DAYS]\n")
         for day, deficit in deficit_days:
             deficit_day = int(cash_on_hand[day][0])
-            write_file.write(f"CASH DEFICIT Day: {deficit_day}, AMOUNT: USD{deficit}\n")
+            write_file.write(f"[CASH DEFICIT Day]: {deficit_day}, AMOUNT: USD{deficit}\n")
 
     return output
 

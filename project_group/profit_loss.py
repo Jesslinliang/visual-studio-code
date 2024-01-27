@@ -2,96 +2,111 @@ from pathlib import Path
 import csv
 
 # Function to sort items based on the second element in a tuple (used for sorting deficit_days_with_amounts)
-def sort_by_amount(item):
+def sort_by_second_element(item):
     return item[1]
 
-# Function to calculate the increment in net profit for a given item
-def calculate_increment(item, filtered_data):
-    return item["net_profit"] - filtered_data[filtered_data.index(item) - 1]["net_profit"]
-
-# Function to calculate the decrement in net profit for a given item
-def calculate_decrement(item, filtered_data):
-    return filtered_data[filtered_data.index(item) - 1]["net_profit"] - item["net_profit"]
-
-# Function to get the amount for a deficit day
-def get_deficit_amount(day, filtered_data):
-    return filtered_data[day]["net_profit"] - filtered_data[day - 1]["net_profit"]
-
-# Function to find the day with the highest net profit increment
-def find_highest_increment(filtered_data):
-    max_increment = filtered_data[0]
-
-    for item in filtered_data[1:]:
-        if calculate_increment(item, filtered_data) > calculate_increment(max_increment, filtered_data):
-            max_increment = item
-
-    return max_increment
-
-# Function to find the day with the highest net profit decrement
-def find_highest_decrement(filtered_data):
-    max_decrement = filtered_data[0]
-
-    for item in filtered_data[1:]:
-        if calculate_decrement(item, filtered_data) > calculate_decrement(max_decrement, filtered_data):
-            max_decrement = item
-
-    return max_decrement
-
-# Function to process profit data
+# Define the main function for processing profit and loss data
 def profit_function():
-    # Path to the input CSV file
-    file_read = Path(r"C:\project_group\csv_reports\Profit_loss.csv")
-    fp_write = Path(r"C:\project_group\summary_report.txt")
+    # specific absolute paths for input and output files
+    file_path_read = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\csv_reports\Profit_loss.csv")
+    file_path_write = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
 
     # Read the CSV file to append profit and quantity data
-    with file_read.open(mode="r", encoding="UTF-8", newline="") as file:
+    with file_path_read.open(mode="r", encoding="UTF-8", newline="") as file:
         reader = csv.reader(file)
         next(reader)  # Skip header
-        net_profit = []
-
-        # Iterate over rows and store data in a dictionary
+        profit_loss_data = []
         for row in reader:
-            net_profit.append({
-                "day": int(row[0]),
-                "item": row[1],
-                "note": row[2],
-                "amount": int(row[3]),
-                "net_profit": int(row[4])
-            })
+            profit_loss_data.append([int(row[0]), float(row[1])])
 
-        # Filter net_profit data for days from 11 to 90
-            filtered_data = [data for data in net_profit if 11 <= data["day"] <= 90]
+    # Initialize an empty string to store the output message
+    output = ""
 
-            deficit_days =[]
-        # Iterate over days to compute deficit days
-            for i in range(1,len(net_profit)):
-                current_profit = net_profit[i]["net_profit"]
-                previous_profit = net_profit[i-1]["net_profit"]
+    # Check if net profit is always increasing or decreasing
+    increasing = all(profit_loss_data[i][1] <= profit_loss_data[i + 1][1] for i in range(len(profit_loss_data) - 1))
+    decreasing = all(profit_loss_data[i][1] >= profit_loss_data[i + 1][1] for i in range(len(profit_loss_data) - 1))
 
-                # Check if the current day's net profit is less than the previous day's
-                if current_profit <= previous_profit:
-                    deficit_days.append(net_profit[i]["day"])
+    if increasing:
+        output += "\n[NET PROFIT] Always increasing"
+    elif decreasing:
+        output += "\n[NET PROFIT] Always decreasing"
+    else:
+        output += "\n[NET PROFIT] Fluctuates"
 
-            output = ""
-            if deficit_days:
-                # Iterate over deficit days and compute deficit amounts
-                deficit_days_with_amounts = [(day, get_deficit_amount(day,filtered_data)) for day in deficit_days]
+    # Keep track of days when there is a net profit deficit
+    deficit_days_with_amounts = []
 
-                #Sort deficit_days_with_amounts based on amounts in descending order
-                deficit_days_with_amounts.sort(key=sort_by_amount, reverse=True)
+    # Day range from day 11 to day 90
+    for day in range(11, min(90, len(profit_loss_data))):
+        current_profit = profit_loss_data[day][1]
+        previous_profit = profit_loss_data[day - 1][1]
 
-                output += "\n\n[TOP 3 DEFICIT DAYS]\n"
-                for day, amount in deficit_days_with_amounts[:3]:
-                    output += f"Day{day}: AMOUNT: USD{amount}\n"
+        # Calculate the deficit for the current day
+        deficit = previous_profit - current_profit
+        deficit_days_with_amounts.append((day, deficit))
 
-            else:
-                # Find the day with the highest net profit increment
-                max_increment = find_highest_increment(filtered_data)
-                output += f"\n[HIGHEST INCREMENT] Day: {max_increment['day']}, AMOUNT: USD{calculate_increment(max_increment, filtered_data)}\n"   
+    # Sort the deficit days with amounts based on the deficit amount
+    sorted_deficit_days = sorted(deficit_days_with_amounts, key=sort_by_second_element, reverse=True)[:3]
 
-                 # Find the day with the highest net profit decrement
-                max_decrement = find_highest_decrement(filtered_data)
-                output += f"[HIGHEST DECREMENT] Day: {max_decrement['day']}, AMOUNT: USD{calculate_decrement(max_decrement, filtered_data)}\n"
+    # Find the highest profit increment and decrement
+    highest_increment_day = None
+    highest_increment_amount = 0
+    highest_decrement_day = None
+    highest_decrement_amount = 0
 
-    return output      
+    # Iterate through the rest of the elements in profit_loss_data
+    for day in range(11, min(90, len(profit_loss_data))):
+        current_profit = int(profit_loss_data[day][1])
+        previous_profit = int(profit_loss_data[day - 1][1])
 
+        # Extract the profit value from the current day and the previous day
+        current_profit = profit_loss_data[day][1]
+        previous_profit = profit_loss_data[day - 1][1]
+
+        # Calculate the increment for the current day
+        increment = current_profit - previous_profit
+        # Check if the increment is greater than the highest_increment_amount
+        if increment > highest_increment_amount:
+            highest_increment_amount = increment
+            highest_increment_day = day
+
+        # Calculate the decrement for the current day
+        decrement = previous_profit - current_profit
+        # Check if the decrement is greater than the highest_decrement_amount
+        if decrement > highest_decrement_amount:
+            highest_decrement_amount = decrement
+            highest_decrement_day = day
+
+    # Print the highest profit increment and decrement
+    if highest_increment_day is not None:
+        output += f"\n[HIGHEST INCREMENT] Day: {highest_increment_day}, Amount: USD{highest_increment_amount}"
+
+    if highest_decrement_day is not None:
+        output += f"\n[HIGHEST DECREMENT] Day: {highest_decrement_day}, Amount: USD{highest_decrement_amount}"
+
+     # Append the top 3 net profit deficit to the main output
+    output += "\n[TOP 3 DEFICIT DAYS]"
+    for i, (day, deficit) in enumerate(sorted_deficit_days, start=1):
+        deficit_day = int(profit_loss_data[day][0])
+        output += f"\n[NET PROFIT DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}"
+
+
+    # List down all the days and amounts when deficit occurs
+    output += "\n[ALL DEFICIT DAYS]"
+    deficit_days_with_amounts.sort(key=sort_by_second_element, reverse=True)
+    for day, deficit in deficit_days_with_amounts:
+        deficit_day = int(profit_loss_data[day][0])
+        output += f"\n[NET PROFIT DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}"
+
+    # Append the result to the summary_report.txt file starting from the second line
+    with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
+        write_file.write("\n" + output)
+
+    return output
+
+# Call the profit_function to generate the summary report
+result = profit_function()
+print(result)
+
+
+ 
