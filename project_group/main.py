@@ -4,7 +4,7 @@ import profit_loss
 import overheads
 
  # Writing to the summary_report.txt file
-file_path = Path(r"C:\project_summary\summary_report.txt")
+file_path = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
 file_path.touch()
 
 with file_path.open(mode="w", encoding="UTF-8") as file:
