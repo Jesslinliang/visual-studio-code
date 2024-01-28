@@ -15,7 +15,7 @@ with file_path.open(mode="w", encoding="UTF-8") as file:
     profit_output = profit_loss.profit_function()
 
 
-        # Write the results to the file
+    # Write the results to the file
     file.write(overheads_output)
     file.write(cash_output)
     file.write(profit_output)
