@@ -97,6 +97,7 @@ def cash_function():
     #Append the result to the summary_report.txt file starting from the second line
     with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
        write_file.write("\n[TOP 3 DEFICIT DAYS]\n")
+       
        for i, (day, deficit) in enumerate(top_deficit_days, start=1):
             deficit_day = int(cash_on_hand[day][0])
             write_file.write(f"[CASH DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}\n")
