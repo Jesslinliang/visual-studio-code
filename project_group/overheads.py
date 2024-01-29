@@ -30,12 +30,13 @@ def overheads_function():
     output += f"[HIGHEST OVERHEADS] {max_category}: {max_value}%"
 
     # Write the result to the summary_report.txt file
-    print("Writing to file:", file_path_write)
+
     with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
             write_file.write(output + "\n")
 
+    return output
 
 # Call the function (the code inside the function must be called or it will not be executed.)
-overheads_function()
+overheads_output = overheads_function()
 
 
