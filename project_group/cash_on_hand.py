@@ -27,7 +27,7 @@ def cash_function(file_path_read, file_path_write):
     deficit_days_with_amounts = []
 
     # Day range from day 11 to the end of the data
-    for day in range(10, len(cash_data)):
+    for day in range(1, len(cash_data)):
         current_cash = cash_data[day][1]
         previous_cash = cash_data[day - 1][1]
 
