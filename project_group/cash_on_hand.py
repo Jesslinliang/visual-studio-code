@@ -1,254 +1,68 @@
-# from pathlib import Path
-# import csv
-
-# # Define a function to be used as a key for sorting by the second element of a tuple
-# def sort_by_second_element(item):
-#     return item[1]
-
-# # Define the main function for processing cash data
-# def cash_function():
-#     # specific absolute paths for input and output files
-#     file_path_read = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\csv_reports\Cash_on_hand.csv")
-#     file_path_write = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
-
-#     # Read the csv file to append profit and quantity from the csv.
-#     with file_path_read.open(mode="r", encoding="UTF-8", newline="") as file:
-#         reader = csv.reader(file)
-#         next(reader)  # skip header
-#         cash_on_hand = []  # Store the data read from the csv file
-
-#         for row in reader:
-#             cash_on_hand.append([int(row[0]), float(row[1])])
-
-#     # Initialize an empty string to store the output message
-#     output = ""
-
-#     # Check if cash-on-hand is always increasing or decreasing
-#     increasing = all(cash_on_hand[i][1] <= cash_on_hand[i + 1][1] for i in range(len(cash_on_hand) - 1))
-#     decreasing = all(cash_on_hand[i][1] >= cash_on_hand[i + 1][1] for i in range(len(cash_on_hand) - 1))
-
-#     # Check if cash-on-hand is always increasing or decreasing
-#     if increasing:
-#         output += "\n[CASH ON HAND] Always increasing"
-#         # Add a line to write to the file
-#         with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
-#             write_file.write("\n[CASH ON HAND] Increasing\n")
-            
-#     elif decreasing:
-#         output += "\n[CASH ON HAND] Always decreasing"
-#         # Add a line to write to the file
-#         with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
-#             write_file.write("\n[CASH ON HAND] Decreasing\n")
-#     else:
-#         output += "\n[CASH ON-HAND] Fluctuates" 
-#         # Add a line to write to the file
-#         with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
-#             write_file.write("\n[CASH ON HAND] Fluctuates\n")
-
-#     # Keep track of days where there is a cash deficit and surplus (empty list)
-#     deficit_days = []
-
-#     # Day range from day 11 to day 90
-#     for day in range(11, min(90, len(cash_on_hand))):
-#         current_cash = int(cash_on_hand[day][1])
-#         previous_cash = int(cash_on_hand[day - 1][1])
-
-#         if current_cash <= previous_cash:
-#             deficit_days.append((day, previous_cash - current_cash))
-#         else:
-#             deficit_days.append((day, current_cash - previous_cash))
-    
-#     # Sort the deficit_days list in descending order by the second element (deficit amount), 
-#     # then select the top 3 deficit days with the highest deficit amount.
-#     top_deficit_days = sorted(deficit_days, key=sort_by_second_element, reverse=True)[:3]
-
-#     # Find the highest increment and decrement
-#     highest_increment_day = None
-#     highest_increment_amount = 0
-#     highest_decrement_day = None
-#     highest_decrement_amount = 0
-
-#     # Iterate through the rest of the elements in cash_on_hand
-#     for day in range(11, min(90, len(cash_on_hand))):
-#         # Extract the cash value from the current day and the previous day
-#         current_cash = int(cash_on_hand[day][1])
-#         previous_cash = int(cash_on_hand[day - 1][1])
-
-#         # Calculate the increment for the current day
-#         increment = current_cash - previous_cash
-#         # Check if the increment is greater than the highest_increment_amount
-#         if increment > highest_increment_amount:
-#             highest_increment_amount = increment
-#             highest_increment_day = day
-
-#         # Calculate the decrement for the current day
-#         decrement = previous_cash - current_cash
-#         # Check if the decrement is greater than the highest_decrement_amount
-#         if decrement > highest_decrement_amount:
-#             highest_decrement_amount = decrement
-#             highest_decrement_day = day
-
-#     # Print the highest increment and decrement
-#     if highest_increment_day is not None:
-#         output += f"\n[HIGHEST INCREMENT] Day: {highest_increment_day}, Amount: USD{highest_increment_amount}"
-
-#     if highest_decrement_day is not None:
-#         output += f"\n[HIGHEST DECREMENT] Day: {highest_decrement_day}, Amount: USD{highest_decrement_amount}"
-
-#     #Append the result to the summary_report.txt file starting from the second line
-#     with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
-#        write_file.write("\n[TOP 3 DEFICIT DAYS]\n")
-
-#        for i, (day, deficit) in enumerate(top_deficit_days, start=1):
-#             deficit_day = int(cash_on_hand[day][0])
-#             write_file.write(f"[CASH DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}\n")
-
-#         # Write all cash deficit days
-#        write_file.write("\n[ALL DEFICIT DAYS]\n")
-#        deficit_days.sort()
-#        for i, (day, deficit) in enumerate(deficit_days, start=1):
-#             deficit_day = int(cash_on_hand[day][0])
-#             write_file.write(f"[CASH DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}\n")
-
-    
-#     #Sort the top 3 deficit days by days in ascending order
-#     top_deficit_days.sort()
-
-#     # List down all the days and amounts when deficit occurs
-#     all_deficit_output = "\n[ALL DEFICIT DAYS]"
-#     for day, deficit in deficit_days:
-#         deficit_day = int(cash_on_hand[day][0])
-#         all_deficit_output += f"\n[CASH DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}"
-#     # Append the top 3 cash deficit to the main output
-#     output += all_deficit_output
-    
-   
-
-#     return output
-
-# result = cash_function ()
-
-
-# from pathlib import Path
-# import csv
-
-# # Define a function to be used as a key for sorting by the second element of a tuple
-# def sort_by_second_element(item):
-#     return item[1]
-
-# # Define the main function for processing cash data
-# def cash_function():
-#     # specific absolute paths for input and output files
-#     file_path_read = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\csv_reports\Cash_on_hand.csv")
-#     file_path_write = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
-
-#     # Read the csv file to append profit and quantity from the csv.
-#     with file_path_read.open(mode="r", encoding="UTF-8", newline="") as file:
-#         reader = csv.reader(file)
-#         next(reader)  # skip header
-#         cash_on_hand = []  # Store the data read from the csv file
-
-#         for row in reader:
-#             cash_on_hand.append([int(row[0]), float(row[1])])
-
-#     # Keep track of days where there is a cash deficit and surplus (empty list)
-#     deficit_days = []
-
-#     # Day range from day 11 to day 90
-#     for day in range(11, min(90, len(cash_on_hand))):
-#         current_cash = int(cash_on_hand[day][1])
-#         previous_cash = int(cash_on_hand[day - 1][1])
-
-#         if current_cash <= previous_cash:
-#             deficit_days.append((day, previous_cash - current_cash))
-#         else:
-#             deficit_days.append((day, current_cash - previous_cash))
-    
-#     # Sort the deficit_days list in descending order by the second element (deficit amount), 
-#     # then select the top 3 deficit days with the highest deficit amount.
-#     top_deficit_days = sorted(deficit_days, key=sort_by_second_element, reverse=True)[:3]
-
-#     #Append the result to the summary_report.txt file starting from the second line
-#     with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
-#        write_file.write("\n[TOP 3 DEFICIT DAYS]\n")
-
-#     deficit_output += "\n[TOP 3 CASH DEFICIT]"
-#     sorted_top3_deficit_days = sorted(sorted_deficit_days[:3], key=sort_by_second_element, reverse=True)
-# for i, (day, deficit) in enumerate(sorted_top3_deficit_days, start=1):
-#     deficit_day = int(cash_on_data_data[day][0])
-#     position = {1: "HIGHEST", 2: "2ND HIGHEST", 3: "3RD HIGHEST"}.get(i)
-#     deficit_output += f"\n[{position} CASH DEFICIT] DAY: {deficit_day}, AMOUNT: USD{int(deficit)}"
-       
-#         # Write all cash deficit days
-#        write_file.write("\n[ALL DEFICIT DAYS]\n")
-#        for i, (day, deficit) in enumerate(deficit_days, start=1):
-#             deficit_day = int(cash_on_hand[day][0])
-#             write_file.write(f"[CASH DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}\n")
-
-#     return
-
-# result = cash_function()
-
-
-
 from pathlib import Path
 import csv
 
-# Define a function to be used as a key for sorting by the second element of a tuple
+# Function to sort items based on the first element in a tuple (used for sorting deficit_days)
+def sort_by_first_element(item):
+    return item[0]
+
+# Function to sort items based on the second element in a tuple (used for sorting top 3 deficit_days)
 def sort_by_second_element(item):
     return item[1]
 
 # Define the main function for processing cash data
-def cash_function():
-    # Specific absolute paths for input and output files
-    file_path_read = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\csv_reports\Cash_on_hand.csv")
-    file_path_write = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
-
-    # Read the CSV file to append profit and quantity from the CSV
+def cash_function(file_path_read, file_path_write):
+    # Read the CSV file to append profit and quantity data
     with file_path_read.open(mode="r", encoding="UTF-8", newline="") as file:
-        reader = csv.reader(file)
-        next(reader)  # Skip header
-        cash_on_hand = []  # Store the data read from the CSV file
+        # Use csv.reader to handle CSV parsing
+        csv_reader = csv.reader(file)
+        
+        # Skip the header row
+        header = next(csv_reader)
+        cash_data = [list(map(float, line)) for line in csv_reader]
 
-        for row in reader:
-            day = int(row[0])
-            amount = float(row[1])
-            cash_on_hand.append([day, amount])
+    # Initialize an empty string to store the output message
+    deficit_output = ""
 
-    # Keep track of days where there is a cash deficit and surplus (empty list)
-    deficit_days = []
+    # Keep track of days when there is a negative cash deficit
+    deficit_days_with_amounts = []
 
-    # Day range from day 11 to day 90
-    for day in range(11, min(90, len(cash_on_hand))):
-        current_cash = int(cash_on_hand[day][1])
-        previous_cash = int(cash_on_hand[day - 1][1])
+    # Day range from day 11 to the end of the data
+    for day in range(10, len(cash_data)):
+        current_cash = cash_data[day][1]
+        previous_cash = cash_data[day - 1][1]
 
-        if current_cash <= previous_cash:
-            deficit_days.append((day, previous_cash - current_cash))
-        else:
-            deficit_days.append((day, current_cash - previous_cash))
-    
-    # Sort the deficit_days list in descending order by the second element (deficit amount), 
-    # then select the top 3 deficit days with the highest deficit amount.
-    top_deficit_days = sorted(deficit_days, key=sort_by_second_element, reverse=True)[:3]
+        # Calculate the deficit for the current day
+        deficit = previous_cash - current_cash
 
-    # Append the result to the summary_report.txt file starting from the second line
-    with file_path_write.open(mode="a", encoding="UTF-8") as write_file:
-        write_file.write("\n[TOP 3 DEFICIT DAYS]\n")
+        if deficit > 0:
+            deficit_days_with_amounts.append((day + 1, deficit))  # Adjust indexing here
 
-        deficit_output = "\n[TOP 3 CASH DEFICIT]"
-        sorted_top3_deficit_days = sorted(top_deficit_days, key=sort_by_second_element, reverse=True)
-        for i, (day, deficit) in enumerate(sorted_top3_deficit_days, start=1):
-            deficit_day = int(cash_on_hand[day][0])
-            position = {1: "HIGHEST", 2: "2ND HIGHEST", 3: "3RD HIGHEST"}.get(i)
-            deficit_output += f"\n[{position} CASH DEFICIT] DAY: {deficit_day}, AMOUNT: USD{int(deficit)}"
+    # Sort the deficit days with amounts based on the day
+    sorted_deficit_days = sorted(deficit_days_with_amounts, key=sort_by_first_element)
 
-        # Write all cash deficit days
-        write_file.write(deficit_output)
-        write_file.write("\n[ALL DEFICIT DAYS]\n")
-        for i, (day, deficit) in enumerate(deficit_days, start=1):
-            deficit_day = int(cash_on_hand[day][0])
-            write_file.write(f"[CASH DEFICIT] Day: {deficit_day}, AMOUNT: USD{deficit}\n")
+    # Append all cash deficit days and amounts to the main output
+    deficit_output += "\n[CASH DEFICIT DAYS]"
+    for day, deficit in sorted_deficit_days:
+        deficit_day = int(cash_data[day - 1][0])  # Adjust indexing here
+        deficit_output += f"\n[CASH DEFICIT] DAY: {deficit_day}, AMOUNT: USD{int(deficit)}"
 
-# Execute the function
-cash_function()
+    # Sort the top 3 cash deficit days based on the deficit amount
+    sorted_top3_deficit_days = sorted(deficit_days_with_amounts, key=sort_by_second_element, reverse=True)[:3]
+
+    # Append the top 3 cash deficit to the main output
+    deficit_output += "\n[TOP 3 CASH DEFICIT]"
+    for i, (day, deficit) in enumerate(sorted_top3_deficit_days, start=1):
+        deficit_day = int(cash_data[day - 1][0])  # Adjust indexing here
+        position = {1: "HIGHEST", 2: "2ND HIGHEST", 3: "3RD HIGHEST"}.get(i)
+        deficit_output += f"\n[{position} CASH DEFICIT] DAY: {deficit_day}, AMOUNT: USD{int(deficit)}"
+
+    # Write results to the summary_report.txt file
+    with file_path_write.open(mode="a", encoding="UTF-8", newline="") as output_file:
+        output_file.write(deficit_output)
+
+# Paths for input and output files
+file_path_read_cash = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\csv_reports\Cash_on_hand.csv")
+file_path_write_cash = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
+
+# Call the function with file paths
+cash_function(file_path_read_cash, file_path_write_cash)
