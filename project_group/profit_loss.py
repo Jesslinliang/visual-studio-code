@@ -50,10 +50,11 @@ def net_profit_deficit_function(file_path_read, file_path_write):
     sorted_top3_deficit_days = sorted(sorted_deficit_days[:3], key=sort_by_second_element, reverse=True)
 
     # Append the top 3 net profit deficit to the main output
-    deficit_output += "\n[TOP 3 PROFIT DEFICIT]"
+    deficit_output += "\n[TOP 3 NET PROFIT DEFICIT]"
     for i, (day, deficit) in enumerate(sorted_top3_deficit_days, start=1):
         deficit_day = int(net_profit_data[day][0])
-        deficit_output += f"\n[HIGHEST PROFIT DEFICIT {i}] DAY: {deficit_day}, AMOUNT: USD{int(deficit)}"
+        position = {1: "HIGHEST", 2: "2ND HIGHEST", 3: "3RD HIGHEST"}.get(i)
+        deficit_output += f"\n[{position} NET PROFIT DEFICIT] DAY: {deficit_day}, AMOUNT: USD{int(deficit)}"
 
     # Write results to the summary_report.txt file
     with file_path_write.open(mode="w", encoding="UTF-8", newline="") as output_file:
@@ -65,3 +66,4 @@ file_path_write = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visu
 
 # Call the function with file paths
 net_profit_deficit_function(file_path_read, file_path_write)
+
