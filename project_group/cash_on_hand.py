@@ -44,7 +44,7 @@ def cash_function(file_path_read, file_path_write):
     deficit_output += "\n[CASH DEFICIT DAYS]"
     for day, deficit in sorted_deficit_days:
         deficit_day = int(cash_data[day - 1][0])  # Adjust indexing here
-        deficit_output += f"\n[CASH DEFICIT] DAY: {deficit_day}, AMOUNT: SGD{int(deficit)}"
+        deficit_output += f"\n[CASH DEFICIT] DAY: {deficit_day}, AMOUNT: USD{int(deficit)}"
 
     # Sort the top 3 cash deficit days based on the deficit amount
     sorted_top3_deficit_days = sorted(deficit_days_with_amounts, key=sort_by_second_element, reverse=True)[:3]
@@ -54,7 +54,7 @@ def cash_function(file_path_read, file_path_write):
     for i, (day, deficit) in enumerate(sorted_top3_deficit_days, start=1):
         deficit_day = int(cash_data[day - 1][0])  # Adjust indexing here
         position = {1: "HIGHEST", 2: "2ND HIGHEST", 3: "3RD HIGHEST"}.get(i)
-        deficit_output += f"\n[{position} CASH DEFICIT] DAY: {deficit_day}, AMOUNT: SGD{int(deficit)}"
+        deficit_output += f"\n[{position} CASH DEFICIT] DAY: {deficit_day}, AMOUNT: USD{int(deficit)}"
 
     # Write results to the summary_report.txt file
     with file_path_write.open(mode="a", encoding="UTF-8", newline="") as output_file:
