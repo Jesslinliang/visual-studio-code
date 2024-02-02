@@ -4,7 +4,6 @@ import cash_on_hand, profit_loss, overheads
 file_path = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
 file_path.touch()
 
-
 with file_path.open(mode="w", encoding="UTF-8") as file:
     overheads_output = overheads.overheads_function()
     cash_output = cash_on_hand.cash_function()
