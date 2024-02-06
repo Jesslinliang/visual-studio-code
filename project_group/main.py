@@ -21,13 +21,11 @@ with file_path_write_cash.open(mode="w", encoding="UTF-8") as file:
     # Handle the case where cash_output is None
     if cash_output is not None:
         file.write(cash_output + "\n")
-    else:
-        file.write("Error in cash_function\n")
+
 
     profit_output = profit_loss.profit_loss_function(file_path_read_profit_loss, file_path_write_profit_loss)
 
     # Handle the case where profit_output is None
     if profit_output is not None:
         file.write(profit_output + "\n")
-    else:
-        file.write("Error in profit_loss_function\n")
+ 
