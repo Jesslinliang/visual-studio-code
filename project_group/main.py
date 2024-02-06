@@ -8,6 +8,8 @@ file_path_read_cash = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\
 file_path_write_cash = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
 file_path_read_profit_loss = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\csv_reports\Profit_loss.csv")
 file_path_write_profit_loss = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
+file_path_read = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\csv_reports\Overheads.csv")
+file_path_write = Path(r"C:\Users\jessl\OneDrive\Microsoft Teams Chat Files\visual studio code\summary_report.txt")
 
 # Open the file in write mode
 with file_path_write_cash.open(mode="w", encoding="UTF-8") as file:
